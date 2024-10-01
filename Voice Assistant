@@ -1,0 +1,64 @@
+import speech_recognition as sr                                                            # understand spoken words
+import pyttsx3                                                                             # convert text into spoken words
+import datetime                                                                            # get real-time and date
+
+# Initialize the speech recognizer and text-to-speech engine
+recognizer = sr.Recognizer()                                                               #spoken words into text 
+engine = pyttsx3.init()                                                                    # speaks out output
+
+# Function for the voice assistant to speak
+def speak(text): 
+    engine.say(text)                                                                       # text to speech
+    engine.runAndWait()                                                                    # executes the text-to-speech
+
+# Function to listen to user's voice and convert it to text
+def listen():                                                                              # recognize the user's speech
+    with sr.Microphone() as source:                                                        # system mic is used to store info :
+        print("Listening...")
+        audio = recognizer.listen(source)
+
+        try:
+            print("Recognizing...")
+            command = recognizer.recognize_google(audio)                                   # Converts the audio into text using Google's speech recognition 
+            print(f"You said: {command}")
+            return command.lower()
+        except:
+            return ""
+
+# Function to tell the current time
+def tell_time():                                                                             # function gives current time
+    current_time = datetime.datetime.now().strftime("%I:%M %p")
+    speak(f"The time is {current_time}")
+    print(f"The time is {current_time}")
+
+# Function to tell the current date
+def tell_date():                                                                            # function gives today's date
+    current_date = datetime.datetime.now().strftime("%B %d, %Y")
+    speak(f"Today's date is {current_date}")
+    print(f"Today's date is {current_date}")
+
+# Function to handle voice commands
+def voice_assistant():
+    while True:
+        command = listen()
+        if 'hello' in command:
+            print("Hello! How are you?")
+            speak("Hello! How are you?")
+        elif 'time' in command:
+            tell_time()
+        elif 'your name' in command:
+            print("My name is Jarvis , How can I help yoou!")
+            speak("My name is Jarvis , How can I help yoou!")
+        elif 'date' in command:
+            tell_date()
+        elif 'stop' in command or 'exit' in command:
+            print("Goodbye!")
+            speak("Goodbye..")
+            break
+        else:
+            print("Please repeat your command.")
+            speak("Please repeat your command.")
+
+# Run the assistant
+if __name__ == "__main__":
+    voice_assistant()
